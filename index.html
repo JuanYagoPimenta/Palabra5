@@ -29,40 +29,41 @@
 		margin: 1%;
 		background-color: darkgrey;
 		border-radius: 2px;
+		max-height: 18%;
 		height: 18%;
 		display: table;
 		width: 18%;
-		font-size: 4vw;
+		font-size: 5vw;
 	}
 	.pieza-roja{
 		float: left;
 		margin: 1%;
 		background-color: red;
 		border-radius: 2px;
-		height: 18%;
+		max-height: 18%;
 		display: table;
 		width: 18%;
-		font-size: 4vw;
+		font-size: 5vw;
 	}
 	.pieza-amarilla{
 		float: left;
 		margin: 1%;
 		background-color: yellow;
 		border-radius: 2px;
-		height: 18%;
+		max-height: 18%;
 		display: table;
 		width: 18%;
-		font-size: 4vw;
+		font-size: 5vw;
 	}
 	.pieza-verde{
 		float: left;
 		margin: 1%;
 		background-color: green;
 		border-radius: 2px;
-		height: 18%;
+		max-height: 18%;
 		display: table;
 		width: 18%;
-		font-size: 4vw;
+		font-size: 5vw;
 	}
 	</style>
 </head>
@@ -71,12 +72,55 @@
 		<H1 class="titulo">Palabra 5</H1>
 	</div>
 	<div class="contenedor-juego" id="tablero">
-		
+		<!--
+		<div class="pieza">A</div>
+		<div class="pieza-amarilla">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza-verde">A</div>
+
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+
+		-->
 		
 	</div>
+	<input type="text" id="input-mobile" style="display: none;" placeholder="Toca acá para escribir">
+
 	<p><b>Instrucciones: </b> Adiviná una palabra de 5 letras, la letra que se ponga en verde esta en posición correcta, si está en amarillo está en posición incorrecta y en rojo no existe esa letra en la palabra.</p>
 	<script type="text/javascript">
-		//window.onload="Inicializacion()";
+		//Si es mobile, display input para poder ingresar texto
+		if ('ontouchstart' in document.documentElement) {
+    		document.getElementById('input-mobile').style = "display : initial;";
+		}
+		var inputmobile = document.getElementById('input-mobile');
+		inputmobile.addEventListener('input',abrirInput);
+		function abrirInput(){
+			inputmobile.value = "";
+		}
+
+
 		//Inicializacion
 		var lugarx = 1; var lugary = 1;var palabraIngresada = '';
 		function Inicializacion(){
@@ -89,7 +133,8 @@
 			document.addEventListener('keydown', (event) => {
 				const keyCode = event.keyCode;
 				if(keyCode == 8){
-					if(lugary>1 && y<5){
+					if(lugary>1){
+						if(lugary==6) return;
 						palabraIngresada.substring(0,palabraIngresada.length-1);
 						var id = 'pieza'+lugarx.toString()+(lugary-1).toString();
 						document.getElementById(id).innerHTML = "";
