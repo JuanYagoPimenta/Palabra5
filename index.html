@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Palabra 5</title>
+	<meta charset="utf-8">
+	<style>
+	body {
+	  font-family: Helvetica, sans-serif;
+	  text-align: center;
+	}
+	h1.titulo {
+		font-size: 3em;
+	}
+	.div-titulo{
+		margin: auto;
+		width: 70%;
+		text-align: center;
+	}
+	.contenedor-juego {
+		padding-top: 2px;
+		margin: auto;
+		background-color: lightgrey;
+		aspect-ratio: 4/4;
+		height: 70vh;
+		text-align: center;
+	}
+	.pieza {
+		float: left;
+		margin: 1%;
+		background-color: darkgrey;
+		border-radius: 2px;
+		height: 18%;
+		display: table;
+		width: 18%;
+		font-size: 5vw;
+	}
+	.pieza-roja{
+		float: left;
+		margin: 1%;
+		background-color: red;
+		border-radius: 2px;
+		height: 18%;
+		display: table;
+		width: 18%;
+		font-size: 5vw;
+	}
+	.pieza-amarilla{
+		float: left;
+		margin: 1%;
+		background-color: yellow;
+		border-radius: 2px;
+		height: 18%;
+		display: table;
+		width: 18%;
+		font-size: 5vw;
+	}
+	.pieza-verde{
+		float: left;
+		margin: 1%;
+		background-color: green;
+		border-radius: 2px;
+		height: 18%;
+		display: table;
+		width: 18%;
+		font-size: 5vw;
+	}
+	</style>
+</head>
+<body onload="Inicializacion();">
+	<div class="div-titulo">
+		<H1 class="titulo">Palabra 5</H1>
+	</div>
+	<div class="contenedor-juego" id="tablero">
+		<!--
+		<div class="pieza">A</div>
+		<div class="pieza-amarilla">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza-verde">A</div>
+
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+		<div class="pieza">A</div>
+
+		-->
+		
+	</div>
+	<p><b>Instrucciones: </b> Adiviná una palabra de 5 letras, la letra que se ponga en verde esta en posición correcta, si está en amarillo está en posición incorrecta y en rojo no existe esa letra en la palabra.</p>
+	<script type="text/javascript">
+		//window.onload="Inicializacion()";
+		//Inicializacion
+		var lugarx = 1; var lugary = 1;var palabraIngresada = '';
+		function Inicializacion(){
+			crearTablero(5,5);
+			cargarPalabra(5);
+			
+			
+			//Event keyboard (Obtener teclas presionadas)
+			
+			document.addEventListener('keydown', (event) => {
+				const keyCode = event.keyCode;
+				if(keyCode == 8){
+					if(lugary>1){
+						palabraIngresada.substring(0,palabraIngresada.length-1);
+						var id = 'pieza'+lugarx.toString()+(lugary-1).toString();
+						document.getElementById(id).innerHTML = "";
+						console.log(palabraIngresada+";"+id);
+						lugary--;
+
+					}
+				}
+				if(keyCode >= 65 && keyCode <= 90){
+
+				}else{
+					if(keyCode == 192){
+
+					}else{
+						return;
+					}
+				}
+  				const keyName = event.key;
+  				//console.log('keydown event\n\n' + 'key: ' + keyName);
+  				
+  				if(lugary>5){
+  					//TODO: Checkear palabra
+  					
+  					palabraIngresada = "";
+  					lugary=1;
+  					lugarx++;
+
+  				}
+  				if(lugarx>4 && lugary > 4){
+  					//TODO: Gameover
+  					alert("Perdiste, la palabra era: " + palabra);
+  					location.reload();
+  				}
+
+  				palabraIngresada += keyName.toUpperCase();
+  				document.getElementById('pieza'+lugarx.toString()+lugary.toString()).innerHTML = keyName.toUpperCase();
+  				lugary++;
+  				if(lugary>5){
+  					checkearPalabra();
+  				}
+  				if(palabra == palabraIngresada){
+  						setTimeout(alert("Ganaste!"),500);
+  						location.reload();
+  					}
+			});
+		}
+		
+		//Crear tablero
+		var tablero = document.getElementById('tablero');
+		function crearTablero(alto,ancho) {
+			tablero.innerHTML = '';
+			for (var x = 1; x < ancho+1; x++) {
+				for (var y = 1; y < alto+1; y++) {
+					var pieza = document.createElement('div');
+					pieza.setAttribute('id', 'pieza'+x.toString() + y.toString());
+					pieza.setAttribute('class', 'pieza');
+					tablero.appendChild(pieza);
+				}
+			}
+		}
+		//Traer diccionario
+		var pathDiccionario = 'diccionario.json';
+		var diccionario = [];
+		function cargarPalabra(letras){
+			fetch(pathDiccionario)
+				.then(response => response.json())
+  				//.then(data => diccionario = data);
+  				.then(function(data){
+  					diccionario = data;
+  					elegirPalabra(letras);
+  				});
+  			
+		}
+
+		//Elegir palabra
+		var palabra;
+		function elegirPalabra(letras){
+			if(letras == null){ console.log('Letras null');return;}
+			if(diccionario.length == 0){
+				console.log('Inicializar diccionario antes');
+				return;
+			}
+			var posiblePalabra = diccionario[Math.round(Math.random()*(diccionario.length-1))];
+			//console.log(posiblePalabra.length + " " + letras);
+			if(posiblePalabra.length != letras){
+				elegirPalabra(letras);
+				return;
+				
+			}else{
+				palabra = posiblePalabra.toUpperCase();
+				console.log(palabra);
+			}
+			
+		}
+
+		//Checkear palabra
+		function checkearPalabra(){
+			//alert(palabra +' vs '+palabraIngresada);
+			var fila = lugarx.toString();
+
+			for (var i = 0; i < palabraIngresada.length; i++) {
+				var id = i+1;
+				var piezaid = 'pieza' + lugarx + id.toString();
+				//console.log(palabra+";"+palabra[i] + ";" + palabraIngresada[i]+";"+palabra.includes(palabraIngresada[i]));
+				if(palabra.includes(palabraIngresada[i])){
+					if(palabra[i] == palabraIngresada[i]){
+						document.getElementById(piezaid).className = 'pieza-verde';
+					}
+					else{
+						document.getElementById(piezaid).className = 'pieza-amarilla';
+					}
+
+
+				}else{
+					document.getElementById(piezaid).className = 'pieza-roja';
+				}
+			}
+		}
+
+	</script>
+</body>
+</html>
